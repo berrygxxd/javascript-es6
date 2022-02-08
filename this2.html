@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>this keyword</title>
+</head>
+
+<body>
+
+  <script>
+    // this 키워드 알아보기 - event lister와 constructor
+    // 3. constructor 안에서 쓰면 constructor로 생성되는 오브젝트임
+
+    function 기계(){
+      this.이름 = 'kim'
+    }
+
+    var 오브젝트 = new 기계();
+  </script>
+
+  <div></div>
+  <button id="btn">버튼</button>
+  <script>
+    // 4. eventlistener 안에서 쓰면 this는 e.currentTarget임
+    document.getElementById('btn').addEventListener('click',  function(e){
+      console.log(this);
+      console.log(e.currentTarget); // 지금 이벤트가 동작하는 곳
+    });
+
+    // Case1
+    document.getElementById('btn').addEventListener('click',  function(e){
+      var 어레이 = [1, 2, 3];
+      어레이.forEach(function(a){
+        //console.log(a)
+        console.log(this)
+      });
+    });
+
+    // Case2
+    // 오브젝트 내에서 콜백함수를 쓴다면 this는?
+    var 오브젝트 = {
+      이름들 : ['김', '이', '박'],
+      함수 : function(){
+        console.log(this); // 위 함수를  소유한 오브젝트
+        오브젝트.이름들.forEach(function(){
+          console.log(this) // window
+        })
+      }
+    }
+
+    오브젝트.함수();
+
+    // Case3
+    // arrow function 안에서의 this는?
+    var 오브젝트2 = {
+      이름들 : ['김', '이', '박'],
+      함수 : function(){
+        console.log(this); // 위 함수를  소유한 오브젝트
+        오브젝트2.이름들.forEach(() => {
+          console.log(this) 
+        })
+      }
+    }
+
+    오브젝트2.함수();
+
+    // arrow function 특징 : 내부의 this값을 변화시키지 않음 (외부 this값 그대로 재사용 가능)
+  </script>
+  
+</body>
+
+</html>
