@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>this keyword</title>
+</head>
+
+<body>
+
+  <script>
+    // this 키워드 알아보기 - 함수와 Object에서 사용
+    // 1-1. 그냥 쓰거나 함수 안에서 쓰면 this는 window를 뜻함
+    console.log(this); // window 
+
+    function 간지나는함수() {
+      console.log(this)
+    }
+    간지나는함수(); // window
+  </script>
+
+  <script>
+    // 1-2. strict mode일 때 함수 안에서 쓰면 undefined임
+    'use strict';
+
+    function 간지나는함수() {
+      console.log(this)
+    }
+    간지나는함수();
+  </script>
+
+  <script>
+    // 2. object 자료형 내에 함수들이 있을 수 있는데 거기서 this는 '주인님'을 뜻함
+    var 오브젝트1 = {
+      data: 'berry',
+      간지함수: function () {
+        console.log(this)
+      }
+    }
+    오브젝트1.간지함수(); // { data : 'berry', 간지함수 : f } 
+    // 이게 뭐냐면 그냥 방금 만든 오브젝트1임
+    // 메소드안에서 this를 쓰면 this는 메소드를 가지고 있는 오브젝트를 뜻함
+    // 쉽게 말해 '메소드의 주인님'을 지칭함
+
+    // 다음 예제의 this는 무슨 값이 출력될까?
+    var 오브젝트2 = {
+      data: {
+        간지함수: function () {
+          console.log(this)
+        }
+      }
+    }
+    오브젝트2.data.간지함수();
+    // 답은 별거없고 오브젝트의 메소드안에서 썼을 때 this는 메소드를 담고있는 주인님을 뜻하기 때문에
+    // 간지함수()를 담고있는 주인님인 오브젝트2.data라는게 위의 this랑 같음
+  </script>
+
+  <script>
+    // 근데 사실은 그냥 this라는 뜻은 2번만 알면 됨 
+    // 1번, 즉 "일반 함수 내에서 썼을 때 this는 window" 라는 정의는 굳이 외울 필요가 없음
+    // 왜냐면 2번 뜻을 잘 이해하면 1번도 자연스레 유추가 가능하기 때문
+
+    // 함수나 변수를 대충 스크립트 태그 안에 만들었을 때, 함수나 변수는 그냥 만들어지는게 아님
+    function 간지나는함수() {
+      console.log()
+    }
+    // 방금 만든 간지나는함수()는 전역변수나 전역함수를 관리하기 위한 window라는 오브젝트에 자동으로 추가가 됨
+  </script>
+
+  <script>
+    // 코드①
+
+    function 간지나는함수() {
+      console.log(this)
+    }
+
+    // 코드②
+    window.간지나는함수 = function () {
+      console.log()
+    };
+
+    // 코드① 코드② 둘다 자바스크립트 입장에서 보면 똑같음
+    
+    // ②문법은 window라는 오브젝트에 함수 자료를 추가하는 문법일 뿐임 
+    // 결론은 전역함수 만들거나 전역변수 만들면 저렇게 window {오브젝트} 안에 담긴다는 것임 
+  </script>
+
+  <script>
+    // 다시 한번 this 출력해보기
+    function 간지나는함수(){
+      console.log(this)
+    }
+    간지나는함수(); // window
+
+    // 📒정리!!
+    // 1. this를 함수안에서 썼을 땐 window가 나온다~라는건 안 외워도 됨
+    // 2. this는 오브젝트 내의 메소드(함수)에서 사용했을 때 메소드의 주인님 오브젝트를 출력해준다~ 이건 기억하기!
+  </script>
+
+  <script>
+    // this 키워드 알아보기 - event lister와 constructor
+    // 3. constructor 안에서 쓰면 constructor로 생성되는 오브젝트임
+
+    function 기계(){
+      this.이름 = 'kim'
+    }
+
+    var 오브젝트 = new 기계();
+  </script>
+
+  <div></div>
+  <button id="btn">버튼</button>
+  <script>
+    // 4. eventlistener 안에서 쓰면 this는 e.currentTarget임
+    document.getElementById('btn').addEventListener('click',  function(e){
+      console.log(this);
+      console.log(e.currentTarget); // 지금 이벤트가 동작하는 곳
+    });
+
+    // Case1
+    document.getElementById('btn').addEventListener('click',  function(e){
+      var 어레이 = [1, 2, 3];
+      어레이.forEach(function(a){
+        //console.log(a)
+        console.log(this)
+      });
+    });
+
+    // Case2
+    // 오브젝트 내에서 콜백함수를 쓴다면 this는?
+    var 오브젝트 = {
+      이름들 : ['김', '이', '박'],
+      함수 : function(){
+        console.log(this); // 위 함수를  소유한 오브젝트
+        오브젝트.이름들.forEach(function(){
+          console.log(this) // window
+        })
+      }
+    }
+
+    오브젝트.함수();
+
+    // Case3
+    // arrow function 안에서의 this는?
+    var 오브젝트2 = {
+      이름들 : ['김', '이', '박'],
+      함수 : function(){
+        console.log(this); // 위 함수를  소유한 오브젝트
+        오브젝트2.이름들.forEach(() => {
+          console.log(this) 
+        })
+      }
+    }
+
+    오브젝트2.함수();
+
+    // arrow function 특징 : 내부의 this값을 변화시키지 않음 (외부 this값 그대로 재사용 가능)
+  </script>
+</body>
+
+</html>
